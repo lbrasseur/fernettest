@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 
 public class ProductService {
 	@POST
-	@Path("/queryProduct")
+	@Path("/queryProduct/{param1}/dummy/{param2}")
 	public ProductQueryResponseDto queryProduct(
 			ProductQueryRequestDto productQueryDto) {
 		return new ProductQueryResponseDto("Fernet Branca",
