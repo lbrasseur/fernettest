@@ -2,13 +2,15 @@ package com.fernet.test;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 
-public class ProductService {
+public interface ProductService {
 	@POST
-	@Path("/queryProduct/{param1}/dummy/{param2}")
-	public ProductQueryResponseDto queryProduct(
-			ProductQueryRequestDto productQueryDto) {
-		return new ProductQueryResponseDto("Fernet Branca",
-				productQueryDto.getCode());
-	}
+	@Path("/queryProduct/{areaCode}/dummy/{productCode}")
+	ProductQueryResponseDto queryProduct(
+			@PathParam("productCode") Integer productCode,
+			@PathParam("areaCode") String areaCode,
+			@QueryParam("stock") Double stock,
+			ProductQueryRequestDto productQueryDto);
 }

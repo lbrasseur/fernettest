@@ -5,9 +5,9 @@
   <script src="jquery-ui.min.js"></script>
   <script type="text/javascript">
 	function restTest() {
-		$.post('queryProduct/123/dummy/6789',
+		$.post('queryProduct/ABC/dummy/6789?stock=345',
 			JSON.stringify({
-                'code': '23462'
+                'name': 'Fernet Branca'
             }),
             function (data) {
 		    	alert(data);

@@ -1,13 +1,13 @@
 package com.fernet.test;
 
 public class ProductQueryRequestDto {
-	private final String code;
+	private final String name;
 
-	public ProductQueryRequestDto(String code) {
-		this.code = code;
+	public ProductQueryRequestDto(String name) {
+		this.name = name;
 	}
 
-	public String getCode() {
-		return code;
+	public String getName() {
+		return name;
 	}
 }
