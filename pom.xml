@@ -4,42 +4,17 @@
 
 	<groupId>com.fernet</groupId>
 	<artifactId>fernettest</artifactId>
-	<version>1.0-SNAPSHOT</version>
-	<packaging>war</packaging>
-
-	<name>fernettest</name>
-	<url>http://maven.apache.org</url>
-
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<fernet-version>0.0.1-SNAPSHOT</fernet-version>
 	</properties>
+	<modules>
+		<module>fernettest-core</module>
+		<module>fernettest-guice</module>
+	</modules>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.fernet</groupId>
-			<artifactId>fernet</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>javax.ws.rs-api</artifactId>
-			<version>2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-servlet</artifactId>
-			<version>3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
@@ -54,18 +29,6 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<configuration>
-					<wtpversion>1.5</wtpversion>
-					<buildOutputDirectory>src/main/webapp/WEB-INF/classes</buildOutputDirectory>
-					<additionalBuildcommands>
-						<buildcommand>com.google.gdt.eclipse.core.webAppProjectValidator</buildcommand>
-					</additionalBuildcommands>
-					<!-- <additionalProjectFacets> <jst.java>1.7</jst.java> </additionalProjectFacets> -->
 				</configuration>
 			</plugin>
 		</plugins>
