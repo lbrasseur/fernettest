@@ -1,21 +1,183 @@
-<!doctype html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-  <head>
-  <script src="external/jquery/jquery.js"></script>
-  <script src="jquery-ui.min.js"></script>
-  <script type="text/javascript">
-	function restTest() {
-		$.post('queryProduct/ABC/dummy/6789?stock=345',
-			JSON.stringify({
-                'name': 'Fernet Branca'
-            }),
-            function (data) {
-		    	alert(data);
-            });
-	}
-  </script>
-  </head>
-  <body>
-    <button type="button" onclick="restTest()">REST Test</button>
-  </body>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cart client</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="jquery/jquery.mobile-1.4.5.min.css" />
+<script src="jquery/jquery-1.11.1.min.js"></script>
+<script src="jquery/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		function goToLogin() {
+			$.mobile.navigate("#loginPage");
+		}
+		function goToCart() {
+			$.mobile.navigate("#cartPage");
+			refreshCart();
+		}
+		function goToProducts() {
+			$.mobile.navigate("#productsPage");
+			refreshProducts();
+		}
+		function login() {
+			post('service/login',
+				{
+					"username": $("#username").val(),
+					"password": $("#password").val()
+				},
+				function(data) {
+						if (data.ok) {
+							goToCart();
+						} else {
+							alert("Error de login");
+						}
+				}
+				);
+		}
+		function logout() {
+			get('service/logout',
+				function(data) {
+						if (data.ok) {
+							goToLogin();
+						} else {
+							alert("Error de logout");
+						}
+				}
+				);
+		}
+		function refreshCart() {
+			$('#cartList').empty();
+			get('service/cart', function(data) {
+				var total = 0;
+				for (itemPos in data.results) {
+					item = data.results[itemPos];
+					var row = $("<li>");
+					row.append(item.quantity + " " + item.productName + " - $" + item.amount);
+					row.append("&nbsp;");
+					row.append($("<input type='button' value='-' onClick='removeProduct(" + item.productId+ ");'>"));
+					$('#cartList').append(row);
+					total += item.amount;
+				}
+				$('#cartList').append($("<li>").append("Total: $" + total));
+				$("#cartList").listview("refresh");
+			});
+		}
+		function checkout() {
+			if (confirm("Va a enviar el carrito. ¿Está seguro?")) {
+				get('service/checkout',
+				function(data) {
+					if (data.ok) {
+						refreshCart();
+					} else {
+						alert("Error de checkout");
+					}
+				});
+			}
+		}
+		function addProduct(productId) {
+			get('service/add/' + productId,
+			function(data) {
+				if (data.ok) {
+					goToCart();
+				} else {
+					alert("Error agregando producto");
+				}
+			});
+		}
+		function removeProduct(productId) {
+			get('service/remove/' + productId,
+			function(data) {
+				if (data.ok) {
+					goToCart();
+				} else {
+					alert("Error removiendo producto");
+				}
+			});
+		}
+		function refreshProducts() {
+			$('#productList').empty();
+			get('service/products', function(data) {
+				for (productPos in data.results) {
+					product = data.results[productPos];
+					var row = $("<li>");
+					row.append(product.name + " - $" + product.price);
+					row.append("&nbsp;");
+					row.append($("<input type='button' value='+' onClick='addProduct(" + product.id + ");'>"));
+					$('#productList').append(row);
+				}
+				$("#productList").listview("refresh");
+			});
+		}
+		function get(url, success) {
+			$.ajax({
+				  url: url,
+				  type: "GET",
+				  data: "",
+				  contentType:"application/json; charset=utf-8",
+				  dataType:"json",
+				  success: success
+				});
+		}
+		function post(url, data, success) {
+			$.ajax({
+				  url: url,
+				  type: "POST",
+				  data: JSON.stringify(data),
+				  contentType:"application/json; charset=utf-8",
+				  dataType:"json",
+				  success: success
+				});
+		}
+	</script>
+
+	<div data-role="page" id="loginPage">
+		<div data-role="header">
+			<h1>Login</h1>
+		</div>
+		<div role="main" class="ui-content">
+			<div class="ui-field-contain">
+				<label for="username">Username:</label>
+				<input type="text" id="username" value="" />
+				<label for="password">Password:</label>
+				<input type="password" id="password" value="" />
+			</div>
+			<input type="button" id="login" value="Login" onclick="login();" />
+		</div>
+		<div data-role="footer">
+			<h4>(c) 2015 Los Borbotones Software Company Inc.</h4>
+		</div>
+	</div>
+
+	<div data-role="page" id="cartPage">
+		<div data-role="header">
+			<h1>Carrito</h1>
+		</div>
+		<div role="main" class="ui-content">
+			<input type='button' value='Refrescar' onclick="refreshCart();" />
+			<input type='button' value='Productos' onclick="goToProducts();" />
+			<input type='button' value='Checkout' onclick="checkout();" />
+			<input type='button' value='Logout' onclick="logout();" />
+			<ul data-role="listview" id="cartList" style="margin-top: 10px"/>
+		</div>
+		<div data-role="footer">
+			<h4>(c) 2015 Los Borbotones Software Company Inc.</h4>
+		</div>
+	</div>
+
+	<div data-role="page" id="productsPage">
+		<div data-role="header">
+			<h1>Productos</h1>
+		</div>
+		<div role="main" class="ui-content">
+			<input type='button' value='Refrescar' onclick="refreshProducts();" />
+			<input type='button' value='Volver al carrito' onclick="goToCart();" />
+			<ul data-role="listview" id="productList" style="margin-top: 10px"/>
+		</div>
+		<div data-role="footer">
+			<h4>(c) 2015 Los Borbotones Software Company Inc.</h4>
+		</div>
+	</div>
+</body>
 </html>
